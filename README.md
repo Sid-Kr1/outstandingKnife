@@ -29,7 +29,7 @@ You can omit the 'sudo' and the '--prefix=DIRNAME' if you want to install the pr
 
 ## Help
 
-If you experience any problems using %s, open an [issue](https://github.com/minillinim/outstandingKnife/issues) on GitHub and tell us about it.
+If you experience any problems using outstandingKnife, open an [issue](https://github.com/minillinim/outstandingKnife/issues) on GitHub and tell us about it.
 
 ## Licence
 
