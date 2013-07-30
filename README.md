@@ -23,17 +23,17 @@ OK will print more instructions as it runs. Follow these to set up the repo on g
 
 To install your new project, cd into the persistentIcyNeptune directory and type:
 
-    sudo python setup.py install --prefix=<DIRNAME> 
+    sudo python setup.py install --prefix=DIRNAME
 
-You can omit the 'sudo' and the '--prefix=<DIRNAME>' if you want to install the project system-wide. Otherwise, provided that <DIRNAME> is in yuor $PATH, you should be good to go straight away.
+You can omit the 'sudo' and the '--prefix=DIRNAME' if you want to install the project system-wide. Otherwise, provided that DIRNAME is in your $PATH, you should be good to go straight away.
 
 ## Help
 
-If you experience any problems using %s, open an [issue](https://github.com/minillinim/%s/issues) on GitHub and tell us about it.
+If you experience any problems using %s, open an [issue](https://github.com/minillinim/outstandingKnife/issues) on GitHub and tell us about it.
 
 ## Licence
 
-Project home page, info on the source tree, documentation, issues and how to contribute, see http://github.com/minillinim/%s
+Project home page, info on the source tree, documentation, issues and how to contribute, see http://github.com/minillinim/outstandingKnife
 
 ## Copyright
 
