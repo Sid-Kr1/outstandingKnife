@@ -8,10 +8,10 @@
 #    Copyright (C) Michael Imelfort                                           #
 #                                                                             #
 ###############################################################################
-#                                            ___                              # 
+#                                            ___                              #
 #                                           |_  |                             #
 #                                             | |                             #
-# __                    ____                  | |                             # 
+# __                    ____                  | |                             #
 # \ ```''''---....____.'\   ```''''-----------| |--.          ____      .--.  #
 #  :.                    `-._                 | |   `''''''```    ``''|`:  :| #
 #   ':.                      `'-..____________| |                     | :  :| #
@@ -87,12 +87,12 @@ class ProjectMaker():
         self.makeSetup()
         self.makeChanges()
         self.makeLicense()
-        
+
         if self.projDir == "":
             cd_cmd = ""
         else:
             cd_cmd = "cd %s" % self.projDir
-        
+
         print """Done!
 NEXT...
 
@@ -117,7 +117,7 @@ python setup.py sdist upload
 
 Enjoi!
 
-""" % (cd_cmd, self.projName) 
+""" % (cd_cmd, self.projName)
 
     def makeDirStructure(self):
         """make the underlying directory structure"""
@@ -128,16 +128,16 @@ Enjoi!
         self.makePath(doc_path)
         self.makePath(pycode_path)
         self.makePath(os.path.join(pycode_path,'test'))
-        
+
         # not a module if it doesn't have an __init__
         with open(os.path.join(pycode_path, "__init__.py"), "w") as I_fh:
             pass
-        
+
     def makePath(self, pathName):
         """make a directory if it doesn't exist"""
         if not os.path.exists(pathName):
             os.makedirs(pathName)
-    
+
     def makeReadme(self, contents=None):
         """make the README file"""
         with open(os.path.join(self.projDir, "README.md"), "w") as R_fh:
@@ -157,16 +157,16 @@ Enjoi!
     def makeLicense(self):
         with open(os.path.join(self.projDir, "LICENSE.txt"), "w") as L_fh:
             self.writeLicense(L_fh)
-        
+
     def makeBin(self):
         """make the main executable"""
-        bin_file = os.path.join(self.projDir, 'bin', self.projName) 
+        bin_file = os.path.join(self.projDir, 'bin', self.projName)
         with open(bin_file, "w") as B_fh:
             self.writeHeader(B_fh)
             self.writeBinCore(B_fh)
 
         # make executable
-        import stat   
+        import stat
         st = os.stat(bin_file)
         os.chmod(bin_file, st.st_mode | stat.S_IEXEC)
 
@@ -186,7 +186,7 @@ setup(
     version='0.0.1',
     author='Michael Imelfort',
     author_email='mike@mikeimelfort.com',
-    packages=['%s', '%s'],
+    packages=['%s'],
     scripts=['%s'],
     url='http://pypi.python.org/pypi/%s/',
     license='GPLv3',
@@ -197,14 +197,13 @@ setup(
 
 """ % (self.projName,
        self.projName_lc,
-       self.projName_lc+'.test',
        os.path.join('bin', self.projName),
        self.projName,
        self.projName)
 
         with open(os.path.join(self.projDir, "setup.py"), "w") as S_fh:
             S_fh.write(setup_string)
-    
+
     def writeReadme(self, fh):
         """write the README file"""
         rm_string = """# %s
@@ -241,7 +240,7 @@ Copyright (c) 2013 Michael Imelfort. See LICENSE.txt for further details.
             suffix = ".py"
         else:
             suffix = ""
-            
+
         header_string = """#!/usr/bin/env python
 ###############################################################################
 #                                                                             #
@@ -285,12 +284,12 @@ __status__ = "Dev"
 """ % (self.projName+suffix)
 
         fh.write(header_string)
-    
-    def writeDivider(self, fh): 
+
+    def writeDivider(self, fh):
         """write dividing lines into a file"""
         for i in range(4):
             fh.write("###############################################################################\n")
-    
+
 
     def writeTemplateCore(self, fh):
         """write the utilities template"""
@@ -300,27 +299,27 @@ __status__ = "Dev"
 
     def sayHi(self):
         print('write some "REAL" code you bum!')
-    
+
     def demoStuff(self):
-        
+
         \"\"\"
-        # parse a file    
+        # parse a file
         try:
             with open(filename, "r") as fh:
                 for line in fh:
                     print line
-        except: 
+        except:
             print "Error opening file:", filename, exc_info()[0]
-            raise    
+            raise
         \"\"\"
-    
+
         \"\"\"
         fig = plt.figure()
-    
+
         #-----
         # make a 3d plot
         ax = fig.add_subplot(111, projection='3d')
-        ax.scatter(points[:,0], 
+        ax.scatter(points[:,0],
                    points[:,1],
                    points[:,2],
                    #edgecolors='none',
@@ -328,7 +327,7 @@ __status__ = "Dev"
                    #s=2,
                    #marker='.'
                    )
-        
+
         #-----
         # make a 2d plot
         fig = plt.figure()
@@ -336,38 +335,27 @@ __status__ = "Dev"
         ax.plot(points[:,0],
                 points[:,1],
                 '*g')
-    
+
         #-----
         # show figure
-        plt.show()  
+        plt.show()
         # or save figure
         plt.savefig(filename,dpi=300,format='png')
-        
+
         #-----
         # clean up!
         plt.close(fig)
         del fig
         \"\"\"
-    
+
         return 0
 """
         fh.write(template_string)
-    
+
     def writeBinCore(self, fh):
         """write the guts of the main bin file for the project"""
         core_string = """import argparse
 import sys
-
-#import os
-#import errno
-
-#import numpy as np
-#np.seterr(all='raise')     
-
-#import matplotlib as mpl
-#import matplotlib.pyplot as plt
-#from mpl_toolkits.mplot3d import axes3d, Axes3D
-#from pylab import plot,subplot,axis,stem,show,figure
 
 ###############################################################################
 ###############################################################################
@@ -387,14 +375,14 @@ def doWork(args):
 ###############################################################################
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     #parser.add_argument('positional_arg', help="Required")
     #parser.add_argument('positional_arg2', type=int, help="Integer argument")
     #parser.add_argument('positional_arg3', nargs='+', help="Multiple values")
     #parser.add_argument('-X', '--optional_X', action="store_true", default=False, help="flag")
-    
+
     # parse the arguments
-    args = parser.parse_args()        
+    args = parser.parse_args()
 
     # profiling happens here. If you'd like to track the speed your code runs at
     # then set the following to True and voila!
