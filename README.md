@@ -15,17 +15,23 @@ Then it should be as simple as:
 
 ## Example usage
 
-To create a project called 'persistentIcyNeptune', go to where you usually like to develop your software and type:
+To create a project called 'PersistentIcyNeptune', go to where you usually like to develop your software and type:
 
-    outstandingKnife persistentIcyNeptune -d persistentIcyNeptune
+    outstandingKnife PersistentIcyNeptune
 
-OK will print more instructions as it runs. Follow these to set up the repo on github and pypi.
+The tool will print more instructions as it runs. Follow these to set up the repo on github and pypi.
 
-To install your new project, cd into the persistentIcyNeptune directory and type:
+To install your new project, cd into the PersistentIcyNeptune directory and type:
 
     sudo python setup.py install --prefix=DIRNAME
 
-You can omit the 'sudo' and the '--prefix=DIRNAME' if you want to install the project system-wide. Otherwise, provided that DIRNAME is in your $PATH, you should be good to go straight away.
+You can omit the 'sudo' if you are installing locally using '--prefix=DIRNAME' and you can omit the prefix if you want to install the project system-wide.
+If the install is system wide then it should all work.
+You can test it by typing:
+
+    persistentncyneptune
+
+For a local install you will have to add DIRNAME/bin to your PATH and DIRNAME/lib/python2.7/site-packages to your PYTHONPATH. Of course you should adjust for different python versions.
 
 ## Help
 
