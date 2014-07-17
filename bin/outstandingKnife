@@ -8,10 +8,10 @@
 #    Copyright (C) Michael Imelfort                                           #
 #                                                                             #
 ###############################################################################
-#                                            ___                              # 
+#                                            ___                              #
 #                                           |_  |                             #
 #                                             | |                             #
-# __                    ____                  | |                             # 
+# __                    ____                  | |                             #
 # \ ```''''---....____.'\   ```''''-----------| |--.          ____      .--.  #
 #  :.                    `-._                 | |   `''''''```    ``''|`:  :| #
 #   ':.                      `'-..____________| |                     | :  :| #
@@ -40,18 +40,22 @@
 ###############################################################################
 
 __author__ = "Michael Imelfort"
-__copyright__ = "Copyright 2013"
+__copyright__ = "Copyright 2013,2014"
 __credits__ = ["Michael Imelfort"]
 __license__ = "GPL3"
-__version__ = "0.0.1"
+__version__ = "1.0.0"
 __maintainer__ = "Michael Imelfort"
 __email__ = "mike@mikeimelfort.com"
-__status__ = "Dev"
+__status__ = "Done"
 
 ###############################################################################
 
+# system imports
 import argparse
 import sys
+
+# local imports
+from outstandingknife.projectMaker import ProjectMaker
 
 ###############################################################################
 ###############################################################################
@@ -60,8 +64,9 @@ import sys
 
 def doWork(args):
     """Wrapper function to allow easy profiling"""
-    from outstandingknife.outstandingKnife import ProjectMaker
-    PM = ProjectMaker(args.projectName, args.projectDir)
+    PM = ProjectMaker(args.projectName,
+                      projDir=args.projectDir,
+                      doDocs=args.doDocs)
     PM.makeProject()
 
 ###############################################################################
@@ -72,14 +77,11 @@ def doWork(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('projectName', help="camelCase name of the pypi project")
-    parser.add_argument('-d', '--projectDir', default="", help="location for the dev arm of the project")
-    #parser.add_argument('positional_arg', help="Required")
-    #parser.add_argument('positional_arg2', type=int, help="Integer argument")
-    #parser.add_argument('positional_arg3', nargs='+', help="Multiple values")
-    #parser.add_argument('-X', '--optional_X', action="store_true", default=False, help="flag")
-    
+    parser.add_argument('-D', '--projectDir', default=None, help="location for the dev arm of the project [None for same as projectName]")
+    parser.add_argument('-d', '--doDocs', default=False, action="store_true", help="build docs directory")
+
     # parse the arguments
-    args = parser.parse_args()        
+    args = parser.parse_args()
 
     # profiling happens here. If you'd like to track the speed your code runs at
     # then set the following to True and voila!

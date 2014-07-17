@@ -2,10 +2,10 @@ from distutils.core import setup
 
 setup(
     name='outstandingKnife',
-    version='0.0.1',
+    version='1.0.0',
     author='Michael Imelfort',
     author_email='mike@mikeimelfort.com',
-    packages=['outstandingknife', 'outstandingknife.test'],
+    packages=['outstandingknife'],
     scripts=['bin/outstandingKnife'],
     url='http://pypi.python.org/pypi/outstandingKnife/',
     license='GPLv3',

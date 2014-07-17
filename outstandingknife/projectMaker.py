@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 ###############################################################################
 #                                                                             #
-#    outstandingKnife.py                                                      #
+#    projectMaker.py                                                          #
 #                                                                             #
-#    Utilities for creating pypi projects                                     #
+#    Utilities for creating github / pypi projects                            #
 #                                                                             #
 #    Copyright (C) Michael Imelfort                                           #
 #                                                                             #
@@ -40,28 +40,21 @@
 ###############################################################################
 
 __author__ = "Michael Imelfort"
-__copyright__ = "Copyright 2013"
+__copyright__ = "Copyright 2014"
 __credits__ = ["Michael Imelfort"]
 __license__ = "GPL3"
-__version__ = "0.0.1"
+__version__ = "1.0.0"
 __maintainer__ = "Michael Imelfort"
 __email__ = "mike@mikeimelfort.com"
-__status__ = "Development"
+__status__ = "Done"
 
 ###############################################################################
 
-# import statements
+# system imports
 import os
 
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-# Track rogue print statements
-#from groopmExceptions import Tracer
-#import sys
-#sys.stdout = Tracer(sys.stdout)
-#sys.stderr = Tracer(sys.stderr)
+# local imports
+
 ###############################################################################
 ###############################################################################
 ###############################################################################
@@ -71,10 +64,17 @@ class ProjectMaker():
     """Make a pypi project"""
     def __init__(self,
                  projName,
-                 projDir):
+                 projDir=None,
+                 doDocs=None):
         self.projName = projName
         self.projName_lc = projName.lower()
-        self.projDir = projDir
+        self.doDocs=doDocs
+
+        # make the dir the same as the name if not specified
+        if projDir is None:
+            self.projDir = projName
+        else:
+            self.projDir = projDir
 
     def makeProject(self):
         """Make a pypi project dawg"""
@@ -88,10 +88,7 @@ class ProjectMaker():
         self.makeChanges()
         self.makeLicense()
 
-        if self.projDir == "":
-            cd_cmd = ""
-        else:
-            cd_cmd = "cd %s" % self.projDir
+        cd_cmd = "cd %s" % self.projDir
 
         print """Done!
 NEXT...
@@ -105,6 +102,7 @@ If you want to add this guy to your github:
 %s
 git init
 git add *
+git add .gitignore
 git create -d %s
 git commit -m "Created by outstandingKnife"
 git push origin master
@@ -122,16 +120,25 @@ Enjoi!
     def makeDirStructure(self):
         """make the underlying directory structure"""
         bin_path = os.path.join(self.projDir, 'bin')
-        doc_path = os.path.join(self.projDir, 'docs')
         pycode_path = os.path.join(self.projDir, self.projName_lc)
         self.makePath(bin_path)
-        self.makePath(doc_path)
+        if self.doDocs:
+            doc_path = os.path.join(self.projDir, 'docs')
+            self.makePath(doc_path)
         self.makePath(pycode_path)
         self.makePath(os.path.join(pycode_path,'test'))
 
         # not a module if it doesn't have an __init__
         with open(os.path.join(pycode_path, "__init__.py"), "w") as I_fh:
             pass
+
+        # make the .gitignore
+        with open(os.path.join(self.projDir, ".gitignore"), "w") as gi_fh:
+            gi_fh.write("MANIFEST\n")
+            gi_fh.write("build\n")
+            gi_fh.write("dist\n")
+            pass
+
 
     def makePath(self, pathName):
         """make a directory if it doesn't exist"""
@@ -160,7 +167,7 @@ Enjoi!
 
     def makeBin(self):
         """make the main executable"""
-        bin_file = os.path.join(self.projDir, 'bin', self.projName)
+        bin_file = os.path.join(self.projDir, 'bin', self.projName_lc)
         with open(bin_file, "w") as B_fh:
             self.writeHeader(B_fh)
             self.writeBinCore(B_fh)
@@ -172,10 +179,9 @@ Enjoi!
 
     def makeTemplate(self):
         """make the template class"""
-        with open(os.path.join(self.projDir, self.projName_lc, self.projName+".py"), "w") as T_fh:
+        with open(os.path.join(self.projDir, self.projName_lc, "templateClass.py"), "w") as T_fh:
             self.writeHeader(T_fh, addPy=True)
             self.writeTemplateCore(T_fh)
-
 
     def makeSetup(self):
         """make the pypi setup file"""
@@ -197,7 +203,7 @@ setup(
 
 """ % (self.projName,
        self.projName_lc,
-       os.path.join('bin', self.projName),
+       os.path.join('bin', self.projName_lc),
        self.projName,
        self.projName)
 
@@ -230,7 +236,7 @@ This software is currently unpublished
 
 ## Copyright
 
-Copyright (c) 2013 Michael Imelfort. See LICENSE.txt for further details.
+Copyright (c) 2014 Michael Imelfort. See LICENSE.txt for further details.
 """ % (self.projName, self.projName, self.projName, self.projName, self.projName)
         fh.write(rm_string)
 
@@ -268,13 +274,22 @@ Copyright (c) 2013 Michael Imelfort. See LICENSE.txt for further details.
 ###############################################################################
 
 __author__ = "Michael Imelfort"
-__copyright__ = "Copyright 2013"
+__copyright__ = "Copyright 2014"
 __credits__ = ["Michael Imelfort"]
 __license__ = "GPLv3"
 __version__ = "0.0.1"
 __maintainer__ = "Michael Imelfort"
 __email__ = "mike@mikeimelfort.com"
 __status__ = "Dev"
+
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+
+# system includes
+
+# local includes
 
 ###############################################################################
 ###############################################################################
@@ -290,7 +305,6 @@ __status__ = "Dev"
         for i in range(4):
             fh.write("###############################################################################\n")
 
-
     def writeTemplateCore(self, fh):
         """write the utilities template"""
         template_string = """class TemplateClass():
@@ -300,24 +314,36 @@ __status__ = "Dev"
     def sayHi(self):
         print('write some "REAL" code you bum!')
 
-    def demoStuff(self):
+    def runCommand(self, cmd):
+        \"\"\"Run a command and take care of stdout
 
+        expects 'cmd' to be a string like "foo -b ar"
+
+        returns (stdout, stderr)
         \"\"\"
-        # parse a file
+        from multiprocessing import Pool
+        from subprocess import Popen, PIPE
+
+        p = Popen(cmd.split(' '), stdout=PIPE)
+        return p.communicate()
+
+    def parseFile(self, filename):
+        \"\"\"parse a file\"\"\"
+        import sys
         try:
             with open(filename, "r") as fh:
                 for line in fh:
                     print line
         except:
-            print "Error opening file:", filename, exc_info()[0]
+            print "Error opening file:", filename, sys.exc_info()[0]
             raise
-        \"\"\"
 
-        \"\"\"
+    def plot3DFigure(self, points, fileName=""):
+        \"\"\"make a 3d plot\"\"\"
+        import matplotlib.pyplot as plt
+        from mpl_toolkits.mplot3d import axes3d, Axes3D
+        from pylab import plot,subplot,axis,stem,show,figure
         fig = plt.figure()
-
-        #-----
-        # make a 3d plot
         ax = fig.add_subplot(111, projection='3d')
         ax.scatter(points[:,0],
                    points[:,1],
@@ -327,28 +353,35 @@ __status__ = "Dev"
                    #s=2,
                    #marker='.'
                    )
+        # show figure
+        if fileName == "":
+            plt.show()
+        else:
+            # or save figure
+            plt.savefig(filename)#,dpi=300,format='png')
+        plt.close(fig)
+        del fig
 
-        #-----
-        # make a 2d plot
+    def plot2DFigure(self, points, fileName=""):
+        \"\"\"make a 2d plot\"\"\"
+        import matplotlib.pyplot as plt
+        from mpl_toolkits.mplot3d import axes3d, Axes3D
+        from pylab import plot,subplot,axis,stem,show,figure
         fig = plt.figure()
         ax = fig.add_subplot(111)
         ax.plot(points[:,0],
                 points[:,1],
                 '*g')
 
-        #-----
         # show figure
-        plt.show()
-        # or save figure
-        plt.savefig(filename,dpi=300,format='png')
-
-        #-----
-        # clean up!
+        if fileName == "":
+            plt.show()
+        else:
+            # or save figure
+            plt.savefig(filename)#,dpi=300,format='png')
         plt.close(fig)
         del fig
-        \"\"\"
 
-        return 0
 """
         fh.write(template_string)
 
@@ -365,7 +398,7 @@ import sys
 def doWork(args):
     \"\"\"Wrapper function to allow easy profiling\"\"\"
     # hook into core project code here. For example:
-    from %s.%s import TemplateClass
+    from %s.templateClass import TemplateClass
     TC = TemplateClass()
     TC.sayHi()
 
@@ -406,7 +439,7 @@ if __name__ == '__main__':
 ###############################################################################
 ###############################################################################
 
-""" % (self.projName_lc, self.projName)
+""" % (self.projName_lc)
         fh.write(core_string)
 
     def writeLicense(self, fh):
