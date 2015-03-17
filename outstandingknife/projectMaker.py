@@ -43,10 +43,8 @@ __author__ = "Michael Imelfort"
 __copyright__ = "Copyright 2014"
 __credits__ = ["Michael Imelfort"]
 __license__ = "GPL3"
-__version__ = "1.0.0"
 __maintainer__ = "Michael Imelfort"
 __email__ = "mike@mikeimelfort.com"
-__status__ = "Done"
 
 ###############################################################################
 
@@ -160,6 +158,7 @@ Enjoi!
         with open(os.path.join(self.projDir, "MANIFEST.in"), "w") as M_fh:
             M_fh.write("include *.txt\n")
             M_fh.write("recursive-include docs *.txt\n")
+            M_fh.write("include README.md\n")
 
     def makeLicense(self):
         with open(os.path.join(self.projDir, "LICENSE.txt"), "w") as L_fh:
